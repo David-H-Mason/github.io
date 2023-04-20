@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<body>
+  <script type="text/javascript" src="pixi.js"></script>
+  <script type="text/javascript" src="pixi3d.js"></script>
+  <script>
+
+/*
+    to run: 
+    npm install 
+    npm start
+*/
+
+////////////////////////////////////////////
+
+// Lights, Controls, and App setup
+
+let app = new PIXI.Application({
+  backgroundColor: 0xdddddd,
+  resizeTo: window,
+  antialias: true
+});
+let control = new PIXI3D.CameraOrbitControl(app.view);
+document.body.appendChild(app.view);
+
+let models = [];
+
+function createModels(gltf) {
+  console.log("creating models");
+  for (let i = 0; i < 5; i++) {
+    for (let j = 0; j < 5; j++) {
+      let model = PIXI3D.Model.from(gltf);
+      app.stage.addChild(model);
+      model.position.x = 3 * i - 5;
+      model.position.y = 3 * j - 5;
+      model.position.z = -10;
+      models.push(model);
+    }
+  }
+}
+
+function destroyModels(models) {
+  console.log("destroying...");
+  for (let i = models.length - 1; i >= 0; i--) {
+    models[i].destroy({ children: true, texture: true, baseTexture: true });
+    models[i] = null;
+  }
+  models = null;
+}
+
+let assetLoader = new PIXI.Loader();
+
+assetLoader.add(
+  "material-cubes.glb",
+  "http://peg-s3-bucket.s3.amazonaws.com/pixi3d-test-assets/mountainTextureCubes.glb"
+);
+
+assetLoader.onComplete.add(function (loader) {
+  createModels(loader["resources"]["material-cubes.glb"].gltf);
+
+  setTimeout(function () {
+    destroyModels(models);
+    ticker.stop();
+  }, 10000);
+
+  ticker.start();
+  app.ticker.add(tick);
+});
+assetLoader.load();
+
+  </script>
+</body>
+
+</html>

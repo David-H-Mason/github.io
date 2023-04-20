@@ -1,0 +1,14 @@
+{
+  "name": "blank-webgame",
+  "description": "Module for compiling ... web game",
+  "version": "1.0.0",
+  "repository": {},
+  "license": {},
+  "devDependencies": {
+    "local-web-server": "^2.6.0"
+  },
+  "dependencies": {},
+  "scripts": {
+    "start": "ws --static.index index.html"
+  }
+}
